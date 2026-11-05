@@ -126,41 +126,55 @@ zlm_stream_alive_second{app="live",schema="fmp4",stream="test",vhost="__defaultV
 zlm_stream_alive_second{app="live",schema="rtmp",stream="test",vhost="__defaultVhost__"} 7
 zlm_stream_alive_second{app="live",schema="rtsp",stream="test",vhost="__defaultVhost__"} 7
 zlm_stream_alive_second{app="live",schema="ts",stream="test",vhost="__defaultVhost__"} 7
+zlm_stream_alive_second{app="nvr",schema="rtsp",stream="aabbccddeeff-1-0",vhost="__defaultVhost__"} 60
+zlm_stream_alive_second{app="nvr",schema="rtsp",stream="aabbccddeeff-1-1",vhost="__defaultVhost__"} 60
 # HELP zlm_stream_bitrate Stream bitrate
 # TYPE zlm_stream_bitrate gauge
 zlm_stream_bitrate{app="live",schema="fmp4",stream="test",vhost="__defaultVhost__"} 31156
 zlm_stream_bitrate{app="live",schema="rtmp",stream="test",vhost="__defaultVhost__"} 20680
 zlm_stream_bitrate{app="live",schema="rtsp",stream="test",vhost="__defaultVhost__"} 20984
 zlm_stream_bitrate{app="live",schema="ts",stream="test",vhost="__defaultVhost__"} 28624
+zlm_stream_bitrate{app="nvr",schema="rtsp",stream="aabbccddeeff-1-0",vhost="__defaultVhost__"} 100
+zlm_stream_bitrate{app="nvr",schema="rtsp",stream="aabbccddeeff-1-1",vhost="__defaultVhost__"} 50
 # HELP zlm_stream_create_stamp Stream create stamp
 # TYPE zlm_stream_create_stamp gauge
 zlm_stream_create_stamp{app="live",schema="fmp4",stream="test",vhost="__defaultVhost__"} 1.731424913e+09
 zlm_stream_create_stamp{app="live",schema="rtmp",stream="test",vhost="__defaultVhost__"} 1.731424913e+09
 zlm_stream_create_stamp{app="live",schema="rtsp",stream="test",vhost="__defaultVhost__"} 1.731424913e+09
 zlm_stream_create_stamp{app="live",schema="ts",stream="test",vhost="__defaultVhost__"} 1.731424913e+09
+zlm_stream_create_stamp{app="nvr",schema="rtsp",stream="aabbccddeeff-1-0",vhost="__defaultVhost__"} 1.73142495e+09
+zlm_stream_create_stamp{app="nvr",schema="rtsp",stream="aabbccddeeff-1-1",vhost="__defaultVhost__"} 1.73142495e+09
 # HELP zlm_stream_info Stream basic information
 # TYPE zlm_stream_info gauge
 zlm_stream_info{app="live",origin_type="rtsp_push",origin_url="rtsp://127.0.0.1:554/live/test",schema="fmp4",stream="test",vhost="__defaultVhost__"} 1
 zlm_stream_info{app="live",origin_type="rtsp_push",origin_url="rtsp://127.0.0.1:554/live/test",schema="rtmp",stream="test",vhost="__defaultVhost__"} 1
 zlm_stream_info{app="live",origin_type="rtsp_push",origin_url="rtsp://127.0.0.1:554/live/test",schema="rtsp",stream="test",vhost="__defaultVhost__"} 1
 zlm_stream_info{app="live",origin_type="rtsp_push",origin_url="rtsp://127.0.0.1:554/live/test",schema="ts",stream="test",vhost="__defaultVhost__"} 1
+zlm_stream_info{app="nvr",origin_type="unknown",origin_url="",schema="rtsp",stream="aabbccddeeff-1-0",vhost="__defaultVhost__"} 1
+zlm_stream_info{app="nvr",origin_type="unknown",origin_url="",schema="rtsp",stream="aabbccddeeff-1-1",vhost="__defaultVhost__"} 1
 # HELP zlm_stream_reader_count Stream reader count
 # TYPE zlm_stream_reader_count gauge
 zlm_stream_reader_count{app="live",schema="fmp4",stream="test",vhost="__defaultVhost__"} 0
 zlm_stream_reader_count{app="live",schema="rtmp",stream="test",vhost="__defaultVhost__"} 0
 zlm_stream_reader_count{app="live",schema="rtsp",stream="test",vhost="__defaultVhost__"} 0
 zlm_stream_reader_count{app="live",schema="ts",stream="test",vhost="__defaultVhost__"} 0
+zlm_stream_reader_count{app="nvr",schema="rtsp",stream="aabbccddeeff-1-0",vhost="__defaultVhost__"} 1
+zlm_stream_reader_count{app="nvr",schema="rtsp",stream="aabbccddeeff-1-1",vhost="__defaultVhost__"} 1
 # HELP zlm_stream_status Stream status (1: active with data flowing, 0: inactive)
 # TYPE zlm_stream_status gauge
 zlm_stream_status{app="live",schema="fmp4",stream="test",vhost="__defaultVhost__"} 1
 zlm_stream_status{app="live",schema="rtmp",stream="test",vhost="__defaultVhost__"} 1
 zlm_stream_status{app="live",schema="rtsp",stream="test",vhost="__defaultVhost__"} 1
 zlm_stream_status{app="live",schema="ts",stream="test",vhost="__defaultVhost__"} 1
+zlm_stream_status{app="nvr",schema="rtsp",stream="aabbccddeeff-1-0",vhost="__defaultVhost__"} 1
+zlm_stream_status{app="nvr",schema="rtsp",stream="aabbccddeeff-1-1",vhost="__defaultVhost__"} 1
 # HELP zlm_stream_total Total number of streams
 # TYPE zlm_stream_total gauge
-zlm_stream_total 1
+zlm_stream_total 3
 # HELP zlm_stream_total_reader_count Total reader count across all schemas
 # TYPE zlm_stream_total_reader_count gauge
+zlm_stream_total_reader_count{app="aabbccddeeff-1-0",stream="__defaultVhost__",vhost="nvr"} 1
+zlm_stream_total_reader_count{app="aabbccddeeff-1-1",stream="__defaultVhost__",vhost="nvr"} 1
 zlm_stream_total_reader_count{app="test",stream="__defaultVhost__",vhost="live"} 0
 # HELP zlm_up Was the last scrape of ZLMediaKit successful.
 # TYPE zlm_up gauge
@@ -168,6 +182,115 @@ zlm_up 1
 # HELP zlm_version_info ZLMediaKit version info.
 # TYPE zlm_version_info gauge
 zlm_version_info{branchName="master",buildTime="2024-06-11T21:28:30",commitHash="c446f6b"} 1
+# HELP zlm_webrtc_camera_egress_bytes_total Bytes sent to players of any stream of the camera, accumulated by the exporter across connections
+# TYPE zlm_webrtc_camera_egress_bytes_total counter
+zlm_webrtc_camera_egress_bytes_total{mac="aabbccddeeff",nvr_id="box01"} 3000
+zlm_webrtc_camera_egress_bytes_total{mac="cam2",nvr_id=""} 400
+# HELP zlm_webrtc_camera_ingress_bytes_total Bytes received for any stream of the camera, accumulated by the exporter across publisher sessions
+# TYPE zlm_webrtc_camera_ingress_bytes_total counter
+zlm_webrtc_camera_ingress_bytes_total{mac="aabbccddeeff",nvr_id="box01"} 10000
+zlm_webrtc_camera_ingress_bytes_total{mac="cam2",nvr_id=""} 300
+# HELP zlm_webrtc_camera_viewers Players currently watching any stream of the camera
+# TYPE zlm_webrtc_camera_viewers gauge
+zlm_webrtc_camera_viewers{mac="aabbccddeeff",nvr_id="box01"} 2
+zlm_webrtc_camera_viewers{mac="cam2",nvr_id=""} 1
+# HELP zlm_webrtc_connections Number of WebRTC connections
+# TYPE zlm_webrtc_connections gauge
+zlm_webrtc_connections{session_type="whep_player"} 3
+zlm_webrtc_connections{session_type="whip_batch_publisher"} 1
+zlm_webrtc_connections{session_type="whip_publisher"} 1
+# HELP zlm_webrtc_egress_bytes_total Bytes sent by WebRTC connections, accumulated by the exporter; whip publishers are excluded
+# TYPE zlm_webrtc_egress_bytes_total counter
+zlm_webrtc_egress_bytes_total{session_type="whep_player"} 3400
+# HELP zlm_webrtc_ingress_bytes_total Bytes received by WebRTC connections, accumulated by the exporter
+# TYPE zlm_webrtc_ingress_bytes_total counter
+zlm_webrtc_ingress_bytes_total{session_type="whep_player"} 120
+zlm_webrtc_ingress_bytes_total{session_type="whip_batch_publisher"} 5000
+zlm_webrtc_ingress_bytes_total{session_type="whip_publisher"} 300
+# HELP zlm_webrtc_publisher_duration_seconds Publisher connection age
+# TYPE zlm_webrtc_publisher_duration_seconds gauge
+zlm_webrtc_publisher_duration_seconds{app="live",id="w1",session_type="whip_publisher",stream="cam2"} 110
+zlm_webrtc_publisher_duration_seconds{app="nvr",id="b1",session_type="whip_batch_publisher",stream="box01"} 120
+# HELP zlm_webrtc_publisher_healthy Whether the publisher saw traffic within its timeout (1: healthy, 0: unhealthy)
+# TYPE zlm_webrtc_publisher_healthy gauge
+zlm_webrtc_publisher_healthy{app="live",id="w1",session_type="whip_publisher",stream="cam2"} 1
+zlm_webrtc_publisher_healthy{app="nvr",id="b1",session_type="whip_batch_publisher",stream="box01"} 1
+# HELP zlm_webrtc_publisher_info whip/whip_batch publisher connection; stream is the NVR id for whip_batch
+# TYPE zlm_webrtc_publisher_info gauge
+zlm_webrtc_publisher_info{app="live",id="w1",local_candidate="10.0.0.2:8000 /host/udp (connected)",remote_candidate="1.2.3.5:50001 /host/udp (connected)",session_type="whip_publisher",signaling="whip",stream="cam2"} 1
+zlm_webrtc_publisher_info{app="nvr",id="b1",local_candidate="10.0.0.2:8000 /host/udp (connected)",remote_candidate="1.2.3.4:50000 /srflx/udp (connected)",session_type="whip_batch_publisher",signaling="whip",stream="box01"} 1
+# HELP zlm_webrtc_publisher_received_bytes_total Bytes received on the publisher connection
+# TYPE zlm_webrtc_publisher_received_bytes_total counter
+zlm_webrtc_publisher_received_bytes_total{app="live",id="w1",session_type="whip_publisher",stream="cam2"} 300
+zlm_webrtc_publisher_received_bytes_total{app="nvr",id="b1",session_type="whip_batch_publisher",stream="box01"} 5000
+# HELP zlm_webrtc_publisher_viewers Players currently watching the publisher
+# TYPE zlm_webrtc_publisher_viewers gauge
+zlm_webrtc_publisher_viewers{app="live",id="w1",session_type="whip_publisher",stream="cam2"} 1
+zlm_webrtc_publisher_viewers{app="nvr",id="b1",session_type="whip_batch_publisher",stream="box01"} 2
+# HELP zlm_webrtc_viewer_duration_seconds Player connection age
+# TYPE zlm_webrtc_viewer_duration_seconds gauge
+zlm_webrtc_viewer_duration_seconds{id="p1",nvr_id="box01",source_id="aabbccddeeff-1-0"} 70
+zlm_webrtc_viewer_duration_seconds{id="p2",nvr_id="box01",source_id="aabbccddeeff-1-1"} 60
+zlm_webrtc_viewer_duration_seconds{id="p3",nvr_id="",source_id="cam2"} 50
+# HELP zlm_webrtc_viewer_healthy Whether the player saw traffic within its timeout (1: healthy, 0: unhealthy)
+# TYPE zlm_webrtc_viewer_healthy gauge
+zlm_webrtc_viewer_healthy{id="p1",nvr_id="box01",source_id="aabbccddeeff-1-0"} 1
+zlm_webrtc_viewer_healthy{id="p2",nvr_id="box01",source_id="aabbccddeeff-1-1"} 0
+zlm_webrtc_viewer_healthy{id="p3",nvr_id="",source_id="cam2"} 1
+# HELP zlm_webrtc_viewer_info Player connection, attributed to the nvr_id/source_id it watches
+# TYPE zlm_webrtc_viewer_info gauge
+zlm_webrtc_viewer_info{app="live",id="p3",local_candidate="10.0.0.2:8000 /host/udp (connected)",mac="cam2",nvr_id="",parent_id="w1",remote_candidate="5.6.7.10:40002 /host/udp (connected)",session_type="whep_player",signaling="whep",source_id="cam2"} 1
+zlm_webrtc_viewer_info{app="nvr",id="p1",local_candidate="10.0.0.2:8000 /host/udp (connected)",mac="aabbccddeeff",nvr_id="box01",parent_id="b1",remote_candidate="5.6.7.8:40000 /srflx/udp (connected)",session_type="whep_player",signaling="whep",source_id="aabbccddeeff-1-0"} 1
+zlm_webrtc_viewer_info{app="nvr",id="p2",local_candidate="10.0.0.2:8000 /host/udp (connected)",mac="aabbccddeeff",nvr_id="box01",parent_id="b1",remote_candidate="5.6.7.9:40001 /srflx/udp (connected)",session_type="whep_player",signaling="whep",source_id="aabbccddeeff-1-1"} 1
+# HELP zlm_whip_batch_bound_slots Slots bound to a source
+# TYPE zlm_whip_batch_bound_slots gauge
+zlm_whip_batch_bound_slots{app="nvr",nvr_id="box01"} 2
+# HELP zlm_whip_batch_free_slots Slots not bound to a source
+# TYPE zlm_whip_batch_free_slots gauge
+zlm_whip_batch_free_slots{app="nvr",nvr_id="box01"} 1
+# HELP zlm_whip_batch_info whip_batch session information
+# TYPE zlm_whip_batch_info gauge
+zlm_whip_batch_info{app="nvr",nvr_id="box01",state="active",transport_id="b1"} 1
+# HELP zlm_whip_batch_received_bytes_total Bytes received by the session's connection
+# TYPE zlm_whip_batch_received_bytes_total counter
+zlm_whip_batch_received_bytes_total{app="nvr",nvr_id="box01"} 5000
+# HELP zlm_whip_batch_receiving_slots Slots receiving RTP
+# TYPE zlm_whip_batch_receiving_slots gauge
+zlm_whip_batch_receiving_slots{app="nvr",nvr_id="box01"} 2
+# HELP zlm_whip_batch_slot_info whip_batch slot bound to a source; slot_id is ZLMediaKit's streamId
+# TYPE zlm_whip_batch_slot_info gauge
+zlm_whip_batch_slot_info{app="nvr",audio_mid="0",audio_ssrc="1001",nvr_id="box01",slot_id="0",source_id="aabbccddeeff-1-0",state="receiving",video_mid="1",video_ssrc="1002"} 1
+zlm_whip_batch_slot_info{app="nvr",audio_mid="2",audio_ssrc="1003",nvr_id="box01",slot_id="1",source_id="aabbccddeeff-1-1",state="receiving",video_mid="3",video_ssrc="1004"} 1
+# HELP zlm_whip_batch_slot_receiving Whether the slot is receiving RTP
+# TYPE zlm_whip_batch_slot_receiving gauge
+zlm_whip_batch_slot_receiving{app="nvr",nvr_id="box01",slot_id="0",source_id="aabbccddeeff-1-0"} 1
+zlm_whip_batch_slot_receiving{app="nvr",nvr_id="box01",slot_id="1",source_id="aabbccddeeff-1-1"} 1
+# HELP zlm_whip_batch_slots Negotiated audio/video slots
+# TYPE zlm_whip_batch_slots gauge
+zlm_whip_batch_slots{app="nvr",nvr_id="box01"} 3
+# HELP zlm_whip_batch_source_info Source bound to a whip_batch session
+# TYPE zlm_whip_batch_source_info gauge
+zlm_whip_batch_source_info{app="nvr",mac="aabbccddeeff",nvr_id="box01",play_app="nvr",play_stream="aabbccddeeff-1-0",slot_id="0",source_id="aabbccddeeff-1-0"} 1
+zlm_whip_batch_source_info{app="nvr",mac="aabbccddeeff",nvr_id="box01",play_app="nvr",play_stream="aabbccddeeff-1-1",slot_id="1",source_id="aabbccddeeff-1-1"} 1
+# HELP zlm_whip_batch_source_ingress_bytes_per_second Current ingress speed of the source
+# TYPE zlm_whip_batch_source_ingress_bytes_per_second gauge
+zlm_whip_batch_source_ingress_bytes_per_second{app="nvr",nvr_id="box01",source_id="aabbccddeeff-1-0"} 100
+zlm_whip_batch_source_ingress_bytes_per_second{app="nvr",nvr_id="box01",source_id="aabbccddeeff-1-1"} 50
+# HELP zlm_whip_batch_source_online Whether the bound source is online
+# TYPE zlm_whip_batch_source_online gauge
+zlm_whip_batch_source_online{app="nvr",nvr_id="box01",source_id="aabbccddeeff-1-0"} 1
+zlm_whip_batch_source_online{app="nvr",nvr_id="box01",source_id="aabbccddeeff-1-1"} 1
+# HELP zlm_whip_batch_source_receiving Whether the source's slot is receiving RTP
+# TYPE zlm_whip_batch_source_receiving gauge
+zlm_whip_batch_source_receiving{app="nvr",nvr_id="box01",source_id="aabbccddeeff-1-0"} 1
+zlm_whip_batch_source_receiving{app="nvr",nvr_id="box01",source_id="aabbccddeeff-1-1"} 1
+# HELP zlm_whip_batch_source_viewers Players currently watching the source
+# TYPE zlm_whip_batch_source_viewers gauge
+zlm_whip_batch_source_viewers{app="nvr",nvr_id="box01",source_id="aabbccddeeff-1-0"} 1
+zlm_whip_batch_source_viewers{app="nvr",nvr_id="box01",source_id="aabbccddeeff-1-1"} 1
+# HELP zlm_whip_batch_viewers Players watching any source of the session
+# TYPE zlm_whip_batch_viewers gauge
+zlm_whip_batch_viewers{app="nvr",nvr_id="box01"} 2
 # HELP zlm_work_threads_delay_total Total of work threads delay
 # TYPE zlm_work_threads_delay_total gauge
 zlm_work_threads_delay_total 40

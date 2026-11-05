@@ -64,7 +64,7 @@ build:
 	CGO_ENABLED=0 $(GO) build -trimpath -ldflags="$(LDFLAGS)" -o zlm_exporter .
 
 build-docker:
-	docker build \
+	docker build --progress=plain --platform=linux/arm64 \
 		--build-arg VERSION=$(VERSION) \
 		--build-arg COMMIT_SHA=$(COMMIT_SHA) \
 		--build-arg BRANCH=$(BRANCH) \

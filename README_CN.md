@@ -113,6 +113,43 @@ curl http://localhost:9101/metrics
 | `zlm_rtp_server_info`                    | port、stream_id         | RTP 服务器信息                  |
 | `zlm_rtp_server_total`                   | {}                                | RTP 服务器总数         |
 
+### WebRTC / whip_batch 指标
+
+依赖 ZLMediaKit 的 `getWebRtcConnectionList`、`whipBatchInfo` 和 `getMediaList?schema=rtsp`。`mac` 取 sourceId 的第一段（去掉冒号的 MAC，统一转小写）。同一 MAC 代表同一台 camera，它的所有通道、码流、回放和对讲都会合并成一路统计。流量 counter 同时带 `nvr_id`（whip_batch 的 stream，即 edgebox / edgecam 的设备 id）；camera 换了 NVR 也能看出流量分别在哪台设备上，查 camera 总量用 `sum by (mac)`。
+
+| 指标 | 标签 | 说明 |
+|---|---|---|
+| `zlm_webrtc_camera_egress_bytes_total` | nvr_id、mac | camera 出站字节（发给所有观看者），由 exporter 累加，counter |
+| `zlm_webrtc_camera_ingress_bytes_total` | nvr_id、mac | camera 入站字节，由 exporter 累加，counter |
+| `zlm_webrtc_camera_viewers` | nvr_id、mac | camera 当前观看人数 |
+| `zlm_webrtc_viewer_info` | id、session_type、signaling、app、nvr_id、source_id、mac、parent_id、local_candidate、remote_candidate | 观看连接（每个连接一条） |
+| `zlm_webrtc_viewer_healthy` / `_duration_seconds` | id、nvr_id、source_id | 观看连接的健康状态和观看时长 |
+| `zlm_webrtc_egress_bytes_total` / `zlm_webrtc_ingress_bytes_total` | session_type | 按连接类型统计的出/入站字节，counter |
+| `zlm_webrtc_connections` | session_type | 连接数 |
+| `zlm_webrtc_publisher_info` | id、session_type、signaling、app、stream、local_candidate、remote_candidate | whip / whip_batch 推流连接；whip_batch 的 stream 即 NVR id |
+| `zlm_webrtc_publisher_healthy` / `_duration_seconds` / `_viewers` / `_received_bytes_total` | id、session_type、app、stream | 推流连接的健康状态、时长、观看人数、收到的字节数 |
+| `zlm_whip_batch_info` | app、nvr_id、transport_id、state | batch 会话 |
+| `zlm_whip_batch_slots` / `_free_slots` / `_bound_slots` / `_receiving_slots` / `_viewers` / `_received_bytes_total` | app、nvr_id | 槽位、观看人数、入站字节 |
+| `zlm_whip_batch_slot_info` | app、nvr_id、slot_id、source_id、state、audio_mid、video_mid、audio_ssrc、video_ssrc | 槽位明细 |
+| `zlm_whip_batch_slot_receiving` | app、nvr_id、slot_id、source_id | 槽位是否在收流 |
+| `zlm_whip_batch_source_info` | app、nvr_id、source_id、mac、slot_id、play_app、play_stream | batch 下绑定的 source |
+| `zlm_whip_batch_source_online` / `_receiving` / `_viewers` / `_ingress_bytes_per_second` | app、nvr_id、source_id | source 是否在线、是否在收流、观看人数、入站速率 |
+
+ZLMediaKit 只上报在线连接的累计字节。exporter 在每次被拉取时，把每个连接的增量累加到按 MAC 记的 counter 上，所以连接断开后流量不会丢。连接断开前最后一个拉取间隔内的字节会丢失；exporter 重启时 counter 会归零，Prometheus 能识别这种重置。
+
+按任意时间段统计流量（Grafana 中 `$__range` 跟随时间选择器，可选今天、昨天、本月、上月或自定义范围）：
+
+```promql
+# 各 camera（MAC）在所选时间段内的出站字节
+sum by (mac) (increase(zlm_webrtc_camera_egress_bytes_total[$__range]))
+# 所选时间段内的出站总量
+sum(increase(zlm_webrtc_egress_bytes_total[$__range]))
+# 东八区每日柱状图（Grafana 查询间隔设为 1d）
+sum by (mac) (increase(zlm_webrtc_camera_egress_bytes_total[1d] offset -16h))
+```
+
+按月查询需要把 Prometheus 的保留期调长，例如 `--storage.tsdb.retention.time=400d`。现成的 dashboard 在 [contrib/grafana/webrtc_dashboard.json](contrib/grafana/webrtc_dashboard.json)，本地演示环境在 [contrib/demo](contrib/demo/docker-compose.yml)。
+
 <details>
 <summary>指标详情示例</summary>
 # HELP zlm_api_status The status of API endpoint

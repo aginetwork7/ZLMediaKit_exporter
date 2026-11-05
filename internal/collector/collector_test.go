@@ -33,6 +33,8 @@ var fixtureNames = []string{
 	"getAllSession",
 	"getMediaList",
 	"listRtpServer",
+	"getWebRtcConnectionList",
+	"whipBatchInfo",
 }
 
 func testLogger() *slog.Logger {
@@ -138,6 +140,8 @@ func TestExporterDescribe(t *testing.T) {
 		streamsInfo, streamStatus, streamReaderCount, streamTotalReaderCount,
 		streamBitrate, streamAliveSecond, streamCreateStamp, streamTotal,
 		rtpServerInfo, rtpServerTotal,
+		webrtcPublisherInfo, webrtcConnections, webrtcCameraEgress, webrtcCameraIngress,
+		whipBatchInfo, whipBatchSlotInfo, whipBatchSourceInfo,
 	} {
 		assert.True(t, described[desc.String()], "missing metric description: %s", desc)
 	}
@@ -229,6 +233,18 @@ func TestScrapeCountsErrorsPerEndpoint(t *testing.T) {
 		assert.Equal(t, 1.0, testutil.ToFloat64(exporter.scrapeErrors.WithLabelValues(c.Endpoint())),
 			"endpoint %s should have recorded one scrape error", c.Endpoint())
 	}
+}
+
+func TestScrapeErrorsAreExposed(t *testing.T) {
+	srv := newStaticServer(t, `{"code":1,"msg":"error"}`)
+
+	exporter, err := New(srv.URL, testSecret, testLogger(), zlmapi.Options{})
+	require.NoError(t, err)
+
+	reg := prometheus.NewRegistry()
+	reg.MustRegister(exporter)
+
+	assert.Contains(t, gatherText(t, reg), `zlm_scrape_errors_total{endpoint="index/api/getMediaList"} 1`)
 }
 
 func TestMustNewConstMetric(t *testing.T) {

@@ -1,0 +1,19 @@
+{
+  "code": 0,
+  "data": {
+    "exists": true,
+    "session": {
+      "app": "nvr", "stream": "box01", "transportId": "b1", "streamCount": 3, "state": "active", "freeStreamCount": 1,
+      "streams": [
+        {"streamId": "0", "audioMid": "0", "videoMid": "1", "audioSsrc": 1001, "videoSsrc": 1002, "sourceId": "aabbccddeeff-1-0", "receiving": true, "state": "receiving"},
+        {"streamId": "1", "audioMid": "2", "videoMid": "3", "audioSsrc": 1003, "videoSsrc": 1004, "sourceId": "aabbccddeeff-1-1", "receiving": true, "state": "receiving"},
+        {"streamId": "2", "audioMid": "4", "videoMid": "5", "audioSsrc": 1005, "videoSsrc": 1006, "sourceId": "", "receiving": false, "state": "idle"}
+      ],
+      "sources": [
+        {"sourceId": "aabbccddeeff-1-1", "streamId": "1", "playApp": "nvr", "playStream": "aabbccddeeff-1-1", "online": true},
+        {"sourceId": "aabbccddeeff-1-0", "streamId": "0", "playApp": "nvr", "playStream": "aabbccddeeff-1-0", "online": true}
+      ],
+      "freeStreams": ["2"]
+    }
+  }
+}

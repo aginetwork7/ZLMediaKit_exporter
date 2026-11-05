@@ -204,6 +204,38 @@
         }
       ],
       "vhost": "__defaultVhost__"
+    },
+    {
+      "aliveSecond": 60,
+      "app": "nvr",
+      "bytesSpeed": 100,
+      "totalBytes": 7000,
+      "createStamp": 1731424950,
+      "originType": 0,
+      "originTypeStr": "unknown",
+      "originUrl": "",
+      "readerCount": 1,
+      "schema": "rtsp",
+      "stream": "aabbccddeeff-1-0",
+      "totalReaderCount": 1,
+      "vhost": "__defaultVhost__",
+      "tracks": []
+    },
+    {
+      "aliveSecond": 60,
+      "app": "nvr",
+      "bytesSpeed": 50,
+      "totalBytes": 3000,
+      "createStamp": 1731424950,
+      "originType": 0,
+      "originTypeStr": "unknown",
+      "originUrl": "",
+      "readerCount": 1,
+      "schema": "rtsp",
+      "stream": "aabbccddeeff-1-1",
+      "totalReaderCount": 1,
+      "vhost": "__defaultVhost__",
+      "tracks": []
     }
   ]
 }

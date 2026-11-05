@@ -1,0 +1,44 @@
+# Local demo: exporter + Prometheus + Grafana with the WebRTC dashboard.
+#
+#   ZLM_API_URL=http://<zlm-host>:<port> ZLM_API_SECRET=<secret> docker compose up -d --build
+#
+# Grafana: http://localhost:3000 (admin/admin) -> "ZLMediaKit WebRTC / whip_batch"
+services:
+  zlm_exporter:
+    build: ../..
+    environment:
+      ZLM_API_URL: ${ZLM_API_URL:-http://host.docker.internal}
+      ZLM_API_SECRET: ${ZLM_API_SECRET:?set ZLM_API_SECRET}
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:v3.5.0
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      # Monthly traffic queries need at least a month of history.
+      - --storage.tsdb.retention.time=400d
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    ports:
+      - "9090:9090"
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:12.1.0
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ../grafana/webrtc_dashboard.json:/var/lib/grafana/dashboards/webrtc_dashboard.json:ro
+      - grafana-data:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+volumes:
+  prometheus-data:
+  grafana-data:

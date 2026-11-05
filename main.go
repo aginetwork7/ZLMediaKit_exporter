@@ -89,14 +89,15 @@ func main() {
 		*zlmApiSecret = getEnv("ZLM_API_SECRET", "")
 	}
 
-	logger.Info("ZLMediaKit Metrics Exporter %s    build date: %s    sha1: %s    Go: %s    GOOS: %s    GOARCH: %s",
-		BuildVersion, BuildDate, BuildCommitSha,
-		runtime.Version(),
-		runtime.GOOS,
-		runtime.GOARCH,
+	logger.Info("ZLMediaKit Metrics Exporter",
+		"version", BuildVersion,
+		"build_date", BuildDate,
+		"sha1", BuildCommitSha,
+		"go", runtime.Version(),
+		"goos", runtime.GOOS,
+		"goarch", runtime.GOARCH,
 	)
 
-	logger.Info("Configuration")
 	logger.Info("web configuration",
 		"timeout", *webTimeout,
 		"ssl_verify", *webSSLVerify,
