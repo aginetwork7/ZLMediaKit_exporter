@@ -24,6 +24,8 @@ const (
 	SubsystemSession        = "session"
 	SubsystemStream         = "stream"
 	SubsystemRtp            = "rtp"
+	SubsystemWebRtc         = "webrtc"
+	SubsystemWhipBatch      = "whip_batch"
 )
 
 // scrapeTimeout bounds a single /metrics scrape across all collectors.
@@ -69,6 +71,7 @@ func New(uri, secret string, logger *slog.Logger, options zlmapi.Options) (*Expo
 			sessionCollector{},
 			streamCollector{},
 			rtpCollector{},
+			newWebRtcCollector(),
 		},
 
 		up: prometheus.NewGauge(prometheus.GaugeOpts{
@@ -98,6 +101,7 @@ func (e *Exporter) Describe(ch chan<- *prometheus.Desc) {
 	}
 	ch <- e.up.Desc()
 	ch <- e.totalScrapes.Desc()
+	e.scrapeErrors.Describe(ch)
 }
 
 // Collect implements prometheus.Collector.
@@ -108,6 +112,7 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 	up := e.scrape(ch)
 	ch <- prometheus.MustNewConstMetric(e.up.Desc(), prometheus.GaugeValue, up)
 	ch <- e.totalScrapes
+	e.scrapeErrors.Collect(ch)
 }
 
 func (e *Exporter) scrape(ch chan<- prometheus.Metric) (up float64) {

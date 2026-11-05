@@ -27,6 +27,9 @@ const (
 	EndpointGetAllSession      = "index/api/getAllSession"
 	EndpointGetMediaList       = "index/api/getMediaList"
 	EndpointListRtpServer      = "index/api/listRtpServer"
+
+	EndpointGetWebRtcConnectionList = "index/api/getWebRtcConnectionList"
+	EndpointWhipBatchInfo           = "index/api/whipBatchInfo"
 )
 
 // Options tunes the HTTP transport used to reach ZLMediaKit.
@@ -67,6 +70,15 @@ type Response[T any] struct {
 	Data T      `json:"data"`
 }
 
+// PagedResponse is the envelope of paginated endpoints, which report the
+// total item count next to "data".
+type PagedResponse[T any] struct {
+	Code  int    `json:"code"`
+	Msg   string `json:"msg"`
+	Total int    `json:"total"`
+	Data  T      `json:"data"`
+}
+
 // APIError reports a ZLMediaKit response carrying a non-zero code.
 type APIError struct {
 	Endpoint string
@@ -80,32 +92,60 @@ func (e *APIError) Error() string {
 
 // Get fetches endpoint and returns the decoded "data" payload.
 func Get[T any](ctx context.Context, c *Client, endpoint string) (T, error) {
+	return GetQuery[T](ctx, c, endpoint, nil)
+}
+
+// GetQuery is Get with query parameters.
+func GetQuery[T any](ctx context.Context, c *Client, endpoint string, query url.Values) (T, error) {
 	var zero T
-
-	uri := fmt.Sprintf("%s/%s", c.baseURL, endpoint)
-	parsedURL, err := url.Parse(uri)
-	if err != nil {
-		return zero, fmt.Errorf("error parsing URL %q: %w", uri, err)
-	}
-
-	req := &http.Request{
-		Method: http.MethodGet,
-		URL:    parsedURL,
-		Header: http.Header{"secret": []string{c.secret}},
-	}
-
-	res, err := c.http.Do(req)
-	if err != nil {
-		return zero, fmt.Errorf("error scraping ZLMediaKit: %w", err)
-	}
-	defer res.Body.Close()
-
 	var resp Response[T]
-	if err := json.NewDecoder(res.Body).Decode(&resp); err != nil {
-		return zero, fmt.Errorf("error decoding JSON response from %s: %w", endpoint, err)
+	if err := c.call(ctx, endpoint, query, &resp); err != nil {
+		return zero, err
 	}
 	if resp.Code != SuccessCode {
 		return zero, &APIError{Endpoint: endpoint, Code: resp.Code, Msg: resp.Msg}
 	}
 	return resp.Data, nil
+}
+
+// GetPage fetches a paginated endpoint and returns the "data" payload along
+// with the reported total.
+func GetPage[T any](ctx context.Context, c *Client, endpoint string, query url.Values) (T, int, error) {
+	var zero T
+	var resp PagedResponse[T]
+	if err := c.call(ctx, endpoint, query, &resp); err != nil {
+		return zero, 0, err
+	}
+	if resp.Code != SuccessCode {
+		return zero, 0, &APIError{Endpoint: endpoint, Code: resp.Code, Msg: resp.Msg}
+	}
+	return resp.Data, resp.Total, nil
+}
+
+func (c *Client) call(ctx context.Context, endpoint string, query url.Values, out any) error {
+	uri := fmt.Sprintf("%s/%s", c.baseURL, endpoint)
+	parsedURL, err := url.Parse(uri)
+	if err != nil {
+		return fmt.Errorf("error parsing URL %q: %w", uri, err)
+	}
+	if len(query) > 0 {
+		parsedURL.RawQuery = query.Encode()
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, parsedURL.String(), nil)
+	if err != nil {
+		return fmt.Errorf("error building request for %s: %w", endpoint, err)
+	}
+	req.Header.Set("secret", c.secret)
+
+	res, err := c.http.Do(req)
+	if err != nil {
+		return fmt.Errorf("error scraping ZLMediaKit: %w", err)
+	}
+	defer res.Body.Close()
+
+	if err := json.NewDecoder(res.Body).Decode(out); err != nil {
+		return fmt.Errorf("error decoding JSON response from %s: %w", endpoint, err)
+	}
+	return nil
 }

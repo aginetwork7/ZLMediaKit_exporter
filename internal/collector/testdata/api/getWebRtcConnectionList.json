@@ -1,0 +1,38 @@
+{
+  "code": 0,
+  "total": 5,
+  "data": [
+    {
+      "id": "b1", "sessionType": "whip_batch_publisher", "signalingProtocol": "whip", "health": "healthy",
+      "localCandidate": "10.0.0.2:8000 /host/udp (connected)", "remoteCandidate": "1.2.3.4:50000 /srflx/udp (connected)",
+      "createTime": 1731424900000, "durationSec": 120, "recvBytes": 5000, "sendBytes": 3000,
+      "app": "nvr", "stream": "box01", "viewerCount": 2,
+      "batch": {"exists": true, "session": {"app": "nvr", "stream": "box01", "transportId": "b1", "streamCount": 3,
+        "state": "active", "freeStreamCount": 1, "boundStreamCount": 2, "receivingStreamCount": 2}}
+    },
+    {
+      "id": "p1", "sessionType": "whep_player", "signalingProtocol": "whep", "health": "healthy",
+      "localCandidate": "10.0.0.2:8000 /host/udp (connected)", "remoteCandidate": "5.6.7.8:40000 /srflx/udp (connected)",
+      "createTime": 1731424950000, "durationSec": 70, "recvBytes": 50, "sendBytes": 1000,
+      "app": "nvr", "stream": "aabbccddeeff-1-0", "parentId": "b1"
+    },
+    {
+      "id": "p2", "sessionType": "whep_player", "signalingProtocol": "whep", "health": "unhealthy",
+      "localCandidate": "10.0.0.2:8000 /host/udp (connected)", "remoteCandidate": "5.6.7.9:40001 /srflx/udp (connected)",
+      "createTime": 1731424960000, "durationSec": 60, "recvBytes": 60, "sendBytes": 2000,
+      "app": "nvr", "stream": "aabbccddeeff-1-1", "parentId": "b1"
+    },
+    {
+      "id": "p3", "sessionType": "whep_player", "signalingProtocol": "whep", "health": "healthy",
+      "localCandidate": "10.0.0.2:8000 /host/udp (connected)", "remoteCandidate": "5.6.7.10:40002 /host/udp (connected)",
+      "createTime": 1731424970000, "durationSec": 50, "recvBytes": 10, "sendBytes": 400,
+      "app": "live", "stream": "cam2", "parentId": "w1"
+    },
+    {
+      "id": "w1", "sessionType": "whip_publisher", "signalingProtocol": "whip", "health": "healthy",
+      "localCandidate": "10.0.0.2:8000 /host/udp (connected)", "remoteCandidate": "1.2.3.5:50001 /host/udp (connected)",
+      "createTime": 1731424910000, "durationSec": 110, "recvBytes": 300, "sendBytes": 400,
+      "app": "live", "stream": "cam2", "viewerCount": 1
+    }
+  ]
+}
