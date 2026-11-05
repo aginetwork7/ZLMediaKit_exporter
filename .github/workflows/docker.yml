@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     runs-on:
-      group: ubuntu-amd64
+      group: ubuntu-arm64
     env:
       PROJECT_ID: zlm-exporter
     permissions:
